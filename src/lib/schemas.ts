@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Define the schema for a single topic
 export const topicSchema = z.object({
-  topic: z.string().min(1, "Topic cannot be empty"),
+  title: z.string().min(1, "Title of the topic cannot be empty"),
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
 

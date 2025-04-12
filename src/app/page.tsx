@@ -1,48 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { TopicsResponse } from '@/lib/schemas';
+import { generateTopics } from '@/app/actions/anthropic';
 
 export default function Home() {
-  const [response, setResponse] = useState<string>('');
-  const [chatResponse, setChatResponse] = useState<TopicsResponse | null>(null);
+  const [chatResponse, setChatResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const callBackend = async () => {
+  const handleGenerate = async () => {
     try {
-      const res = await fetch('/api/hello', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ test: 'test' })
-      });
-      const data = await res.json();
-      setResponse(data.message);
-    } catch (error) {
-      setResponse('Error calling backend');
-    }
-  };
-
-  const callChatGPT = async () => {
-    try {
+      setIsLoading(true);
       setError(null);
-      const res = await fetch('/api/openai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: "List 3 important topics an inhouse legal council would sicuss with their AI legal assistant and explain them in detail about privacy law relavant for the company."
-        })
-      });
       
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to fetch data');
-      }
-
-      const data = await res.json();
+      const data = await generateTopics(
+        "List 3 important topics an inhouse legal council would discuss with their AI legal assistant and explain them in detail about privacy law relevant for the company."
+      );
+      
       console.log('Received data:', data); // Debug log
       
       if (!data.topics) {
@@ -50,51 +24,47 @@ export default function Home() {
       }
 
       setChatResponse(data);
-    } catch (error) {
-      console.error('Error:', error);
-      setError(error instanceof Error ? error.message : 'An error occurred');
-      setChatResponse(null);
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4">
-      <h1 className="text-4xl font-bold">Hello World!</h1>
-      <div className="flex gap-4">
-        <button 
-          onClick={callBackend}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
+        <h1 className="text-4xl font-bold mb-8">Legal Topics Generator</h1>
+        
+        <button
+          onClick={handleGenerate}
+          disabled={isLoading}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
         >
-          Call Backend
+          {isLoading ? 'Generating...' : 'Generate Topics'}
         </button>
-        <button 
-          onClick={callChatGPT}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-        >
-          Call ChatGPT
-        </button>
-      </div>
-      {response && (
-        <p className="text-lg mt-4">Backend says: {response}</p>
-      )}
-      {error && (
-        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
-          Error: {error}
-        </div>
-      )}
-      {chatResponse?.topics && (
-        <div className="mt-4 p-4 bg-gray-100 text-black rounded max-w-2xl w-full">
-          <h2 className="text-xl font-bold mb-2">Topics</h2>
-          <div className="space-y-4">
-            {chatResponse.topics.map((topic, index) => (
-              <div key={index} className="p-4 bg-white rounded shadow">
-                <h3 className="text-lg font-semibold">{topic.topic}</h3>
-                <p className="mb-2">{topic.description}</p>
-              </div>
-            ))}
+
+        {error && (
+          <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
+            {error}
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {chatResponse && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4">Generated Topics</h2>
+            <div className="space-y-4">
+              {chatResponse.topics.map((topic: any, index: number) => (
+                <div key={index} className="p-4 bg-gray-50 rounded-lg text-gray-600">
+                  <h3 className="text-xl font-medium">{topic.title}</h3>
+                  <p className="mt-2">{topic.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
