@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateTopics } from '@/app/actions/anthropic';
+import { generateThreads, generateTopics } from '@/app/actions/anthropic';
 
 import Slider from '@/components/Slider';
 
@@ -10,16 +10,18 @@ export default function SyntheticQueriesLandingPage() {
   const [areaOfLaw, setAreaOfLaw] = useState('privacy law');
   const [topics, setTopics] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
+  const [threads, setThreads] = useState<any>(null);
+  const [isGeneratingThreads, setIsGeneratingThreads] = useState(false);
 
-  const handleGenerate = async () => {
+  const handleGenerateTopics = async () => {
     try {
-      setIsLoading(true);
+      setIsGeneratingTopics(true);
       setError(null);
       
       const data = await generateTopics(areaOfLaw);
       
-      console.log('Received data:', data); // Debug log
+      console.log('Received topics:', data); // Debug log
       
       if (!data.topics) {
         throw new Error('Invalid response format: topics missing');
@@ -30,7 +32,29 @@ export default function SyntheticQueriesLandingPage() {
       console.error('Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
-      setIsLoading(false);
+      setIsGeneratingTopics(false);
+    }
+  };
+
+  const handleGenerateThreads = async () => {
+    try {
+      setIsGeneratingThreads(true);
+      setError(null);
+      
+      const data = await generateThreads(topics);
+      
+      console.log('Received threads:', data); // Debug log
+      
+      if (!data.threads) {
+        throw new Error('Invalid response format: threads missing');
+      }
+
+      setThreads(data.threads);
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsGeneratingThreads(false);
     }
   };
 
@@ -50,11 +74,18 @@ export default function SyntheticQueriesLandingPage() {
         
         <div className="flex gap-4">
           <button
-            onClick={handleGenerate}
-            disabled={isLoading}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-        >
-            {isLoading ? 'Generating...' : 'Generate Topics'}
+            onClick={handleGenerateTopics}
+            disabled={isGeneratingTopics || isGeneratingThreads}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+            >
+            {isGeneratingTopics ? 'Generating Topics...' : 'Generate Topics'}
+          </button>
+          <button
+            onClick={handleGenerateThreads}
+            disabled={!topics || isGeneratingTopics || isGeneratingThreads}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+            >
+            {isGeneratingThreads ? 'Generating Threads...' : 'Generate Threads'}
           </button>
         </div>
 

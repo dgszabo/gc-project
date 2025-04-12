@@ -1,16 +1,33 @@
 import { z } from 'zod';
 
-// Define the schema for a single topic
+// TOPICS SCHEMAs
 export const topicSchema = z.object({
   title: z.string().min(1, "Title of the topic cannot be empty"),
   description: z.string().min(10, "Description must be at least 10 characters"),
+  role: z.enum(['user', 'assistant'], {
+    errorMap: () => ({ message: "Role must be either 'user' or 'assistant'" })
+  })
 });
 
-// Define the schema for the entire response
 export const topicsResponseSchema = z.object({
   topics: z.array(topicSchema).min(1, "Must have at least one topic"),
 });
 
-// Type inference
 export type Topic = z.infer<typeof topicSchema>;
 export type TopicsResponse = z.infer<typeof topicsResponseSchema>;
+
+// THREADS SCHEMAs
+export const threadSchema = z.object({
+  role: z.enum(['user', 'assistant'], {
+    errorMap: () => ({ message: "Role must be either 'user' or 'assistant'" })
+  }),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+});
+
+export const threadsResponseSchema = z.object({
+  threads: z.array(threadSchema).min(1, "Must have at least one thread"),
+});
+
+export type Thread = z.infer<typeof threadSchema>;
+export type ThreadsResponse = z.infer<typeof threadsResponseSchema>;
+
