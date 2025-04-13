@@ -1,5 +1,10 @@
 import { Message, Topic } from "@/lib/schemas";
 
+/*
+  WARNING:  These prompts are used to generate topics and threads, and analyze them both by Anthropic and OpenAI LLMs.
+            If you change them, double check that the prompts work with both LLMs.
+*/
+
 export function buildTopicsPrompt(areaOfLaw: string) {
   return `
     You are an in-house legal counsel at a mid-sized company in the US. You need to generate realistic legal discussion topics that would occur between in-house counsel and their AI legal assistant.
