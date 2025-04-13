@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { analyzeChatThreads as analyzeChatThreadsAnthropic } from '@/app/actions/anthropic'
 import { analyzeChatThreads as analyzeChatThreadsOpenAI } from '@/app/actions/openai'
 import { Message, Analysis } from '@/lib/schemas'
-import { Spinner } from '@/components/spinner';
+import { Spinner } from '@/components/core/spinner';
 
 interface GenerateAnalysisButtonProps {
   threads: Message[][] | null;

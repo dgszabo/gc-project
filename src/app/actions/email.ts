@@ -1,5 +1,5 @@
 import { render } from '@react-email/render';
-import { AnalysisEmail } from '@/components/analysis-email';
+import { AnalysisEmail } from '@/email-templates/analysis-email';
 import { Analysis } from '@/lib/schemas';
 import React from 'react';
 

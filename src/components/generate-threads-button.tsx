@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { generateThreads as generateThreadsAnthropic } from '@/app/actions/anthropic'
 import { generateThreads as generateThreadsOpenAI } from '@/app/actions/openai'
 import { Analysis, Message, Topic } from '@/lib/schemas';
-import { Spinner } from '@/components/spinner';
+import { Spinner } from '@/components/core/spinner';
 
 interface GenerateThreadsButtonProps {
   topics: Topic[];

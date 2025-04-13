@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import Slider from '@/components/slider';
+import Slider from '@/components/core/slider';
 import ChatThreadModal from '@/components/chat-thread-modal';
 import { Analysis, Thread, Message } from '@/lib/schemas';
 import AnalysisResultModal from '@/components/analysis-result-modal';

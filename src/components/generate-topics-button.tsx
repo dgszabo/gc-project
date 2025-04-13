@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { generateTopics as generateTopicsAnthropic } from '@/app/actions/anthropic'
 import { generateTopics as generateTopicsOpenAI } from '@/app/actions/openai'
-import { Spinner } from '@/components/spinner';
+import { Spinner } from '@/components/core/spinner';
 
 interface Topic {
   title: string;

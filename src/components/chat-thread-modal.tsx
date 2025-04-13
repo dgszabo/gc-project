@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/dialog'
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/core/dialog'
 import { Message } from '@/lib/schemas';
 import { PersonIcon, RocketIcon } from '@radix-ui/react-icons';
 

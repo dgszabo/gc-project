@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/dialog'
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/core/dialog'
 import { Analysis } from '@/lib/schemas'
 import { generateAnalysisEmail } from '@/app/actions/email'
 
