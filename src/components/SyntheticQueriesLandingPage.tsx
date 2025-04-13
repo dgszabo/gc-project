@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { generateThreads, generateTopics } from '@/app/actions/anthropic';
 
-import Slider from '@/components/Slider';
+import Slider from '@/components/slider';
+import ChatThreadModal from '@/components/chatThreadModal';
+import { Thread } from '@/lib/schemas';
 
 
 export default function SyntheticQueriesLandingPage() {
@@ -49,7 +51,7 @@ export default function SyntheticQueriesLandingPage() {
         throw new Error('Invalid response format: threads missing');
       }
 
-      setThreads(data.threads);
+      setThreads(data.threads.map((thread: Thread) => thread.messages));
     } catch (err) {
       console.error('Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -57,6 +59,8 @@ export default function SyntheticQueriesLandingPage() {
       setIsGeneratingThreads(false);
     }
   };
+
+  console.log('Threads:', threads);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -101,8 +105,16 @@ export default function SyntheticQueriesLandingPage() {
             <div className="space-y-4">
               {topics.map((topic: any, index: number) => (
                 <div key={index} className="p-4 bg-gray-50 rounded-lg text-gray-600">
-                  <h3 className="text-xl font-medium">{topic.title}</h3>
-                  <p className="mt-2">{topic.description}</p>
+                  <div className="flex justify-between">
+                    <div>
+                      <h3 className="text-xl font-medium">{topic.title}</h3>
+                      <p className="mt-2">{topic.description}</p>
+                    </div>
+                    <ChatThreadModal 
+                      title={topic.title}
+                      messages={threads?.[index]}
+                    />
+                  </div>
                 </div>
               ))}
             </div>

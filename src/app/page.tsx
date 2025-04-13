@@ -1,4 +1,4 @@
-import SyntheticQueriesLandingPage from '@/components/SyntheticQueriesLandingPage';
+import SyntheticQueriesLandingPage from '@/components/syntheticQueriesLandingPage';
 
 export default function Home() {
   return (

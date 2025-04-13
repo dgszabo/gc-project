@@ -2,7 +2,7 @@
 
 import { generateObject } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic'
-import { Topic, topicsResponseSchema, threadsResponseSchema } from '@/lib/schemas';
+import { Topic, topicsResponseSchema, threadSchema } from '@/lib/schemas';
 
 export async function generateTopics(areaOfLaw: string = 'privacy law') {
   const { object: topics } = await generateObject({
@@ -35,7 +35,7 @@ async function generateThreadWithRetry(topic: Topic, retries = 3): Promise<any> 
       const result = await generateObject({
         model: anthropic('claude-3-5-sonnet-20241022'),
         maxTokens: 4000,
-        schema: threadsResponseSchema,
+        schema: threadSchema,
         prompt: `
           You are a world class legal expert. You are simulating a life-like conversation between an in house legal council and their AI legal assistant about ${topic.title}. In more detail, the topic is ${topic.description}.
           
