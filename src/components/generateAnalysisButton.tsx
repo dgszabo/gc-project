@@ -9,7 +9,8 @@ interface GenerateAnalysisButtonProps {
   areaOfLaw: string;
   setAnalysis: (analysis: Analysis | null) => void;
   setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const GenerateAnalysisButton = ({
@@ -17,7 +18,8 @@ const GenerateAnalysisButton = ({
   areaOfLaw,
   setAnalysis,
   setError,
-  setLoading,
+  isLoading,
+  setIsLoading,
 }: GenerateAnalysisButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -26,7 +28,7 @@ const GenerateAnalysisButton = ({
     
     try {
       setIsGenerating(true)
-      setLoading(true)
+      setIsLoading(true)
       setError(null)
       setAnalysis(null)
       
@@ -42,15 +44,15 @@ const GenerateAnalysisButton = ({
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsGenerating(false)
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   return (
     <button
       onClick={handleGenerateAnalysis}
-      disabled={!threads || isGenerating}
-      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${isGenerating || !threads ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+      disabled={!threads || isLoading}
+      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!threads || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
     >
       {isGenerating ? 'Generating Analysis...' : 'Generate Analysis'}
     </button>

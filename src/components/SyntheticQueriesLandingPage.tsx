@@ -19,58 +19,9 @@ export default function SyntheticQueriesLandingPage() {
   const [areaOfLaw, setAreaOfLaw] = useState('privacy law');
   const [topics, setTopics] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
   const [threads, setThreads] = useState<Message[][] | null>(null);
-  const [isGeneratingThreads, setIsGeneratingThreads] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
-
-  const handleGenerateThreads = async () => {
-    try {
-      setIsGeneratingThreads(true);
-      setError(null);
-      setThreads(null);
-      setAnalysis(null);
-      
-      const data = await generateThreads(topics);
-      
-      console.log('Received threads:', data); // Debug log
-      
-      if (!data.threads) {
-        throw new Error('Invalid response format: threads missing');
-      }
-
-      setThreads(data.threads.map((thread: Thread) => thread.messages));
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsGeneratingThreads(false);
-    }
-  };
-
-  const handleGenerateAnalysis = async () => {
-    try {
-      setIsGeneratingAnalysis(true);
-      setError(null);
-      setAnalysis(null);
-      
-      const data = await analyzeChatThreads(threads as Message[][], areaOfLaw);
-      
-      console.log('Received analysis:', data); // Debug log
-      
-      if (!data) {
-        throw new Error('Invalid response format: analysis missing');
-      }
-
-      setAnalysis(data as Analysis);
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsGeneratingAnalysis(false);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -93,7 +44,8 @@ export default function SyntheticQueriesLandingPage() {
             setThreads={setThreads}
             setAnalysis={setAnalysis}
             setError={setError}
-            setLoading={setIsGeneratingTopics}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
 
           <GenerateThreadsButton
@@ -101,7 +53,8 @@ export default function SyntheticQueriesLandingPage() {
             setThreads={setThreads}
             setAnalysis={setAnalysis}
             setError={setError}
-            setLoading={setIsGeneratingThreads}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
 
           <GenerateAnalysisButton
@@ -109,7 +62,8 @@ export default function SyntheticQueriesLandingPage() {
             areaOfLaw={areaOfLaw}
             setAnalysis={setAnalysis}
             setError={setError}
-            setLoading={setIsGeneratingAnalysis}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
 
           {analysis && (
@@ -129,7 +83,7 @@ export default function SyntheticQueriesLandingPage() {
             <div className="space-y-4">
               {topics.map((topic: any, index: number) => (
                 <div key={index} className="p-4 bg-gray-50 rounded-lg text-gray-600">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between pr-4">
                     <div>
                       <h3 className="text-xl font-medium">{topic.title}</h3>
                       <p className="mt-2">{topic.description}</p>
@@ -137,6 +91,7 @@ export default function SyntheticQueriesLandingPage() {
                     <ChatThreadModal 
                       title={topic.title}
                       messages={threads?.[index] || []}
+                      isLoading={isLoading}
                     />
                   </div>
                 </div>

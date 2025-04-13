@@ -45,7 +45,7 @@ const AnalysisResultModal = ({ analysis }: AnalysisResultModalProps) => {
           type="button"
           aria-haspopup="dialog"
           aria-expanded={isOpen}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
         >
           View Analysis Results
         </button>
@@ -57,7 +57,7 @@ const AnalysisResultModal = ({ analysis }: AnalysisResultModalProps) => {
           </DialogTitle>
           <button
             onClick={handleDownloadEmail}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
           >
             Download Email
           </button>

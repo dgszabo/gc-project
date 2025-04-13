@@ -8,9 +8,10 @@ import { PersonIcon, RocketIcon } from '@radix-ui/react-icons';
 interface ChatThreadModalProps {
   title: string;
   messages?: Message[];
+  isLoading: boolean;
 }
 
-const ChatThreadModal = ({ title, messages = [] }: ChatThreadModalProps) => {
+const ChatThreadModal = ({ title, messages = [], isLoading }: ChatThreadModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -25,8 +26,8 @@ const ChatThreadModal = ({ title, messages = [] }: ChatThreadModalProps) => {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-controls={`dialog-${title.replace(/\s+/g, '-').toLowerCase()}`}
-          disabled={!messages || messages.length === 0}
-          className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!messages || messages.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+          disabled={!messages || messages.length === 0 || isLoading}
+          className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!messages || messages.length === 0 || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
         >
           View Thread
         </button>

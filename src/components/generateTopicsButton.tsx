@@ -9,14 +9,16 @@ interface GenerateTopicsButtonProps {
   setThreads: (threads: any) => void;
   setAnalysis: (analysis: any) => void;
   setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const GenerateTopicsButton = ({
   areaOfLaw,
   setTopics,
   setError,
-  setLoading,
+  isLoading,
+  setIsLoading,
   setThreads,
   setAnalysis,
 }: GenerateTopicsButtonProps) => {
@@ -27,7 +29,7 @@ const GenerateTopicsButton = ({
     
     try {
       setIsGenerating(true)
-      setLoading(true)
+      setIsLoading(true)
       setError(null)
       setTopics(null)
       setThreads(null)
@@ -45,15 +47,15 @@ const GenerateTopicsButton = ({
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsGenerating(false)
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   return (
     <button
       onClick={handleGenerateTopics}
-      disabled={isGenerating}
-      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+      disabled={isLoading}
+      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
     >
       {isGenerating ? 'Generating Topics...' : 'Generate Topics'}
     </button>
