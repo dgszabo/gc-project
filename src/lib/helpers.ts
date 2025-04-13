@@ -13,7 +13,7 @@ export function buildTopicsPrompt(areaOfLaw: string) {
     6. Urgency: The level of urgency of the question (e.g., a question about a new regulation that we need to comply with in 2 weeks vs a question about a clause in a contract that we need to review in 2 months)
     7. Company type: The type of company (e.g., a tech company vs a manufacturing company vs a retail company)
 
-    Generate 10 diverse topics about ${areaOfLaw} law that cover different scenarios:
+    Generate 10 diverse topics about "${areaOfLaw}" that cover different scenarios, for example but not limited to (only apply any of these sample ideas if relevant to ${areaOfLaw}):
     - Vendor and third-party risk management
     - Policy drafting and review
     - Regulatory compliance and updates
@@ -45,15 +45,16 @@ export function buildTopicsPrompt(areaOfLaw: string) {
 
 export function buildThreadPrompt(topic: Topic) {
   return `
-    You are an in-house legal counsel at a mid-sized tech company in the US. You are having a conversation with your AI legal assistant about ${topic.title}. The specific context is: ${topic.description}
+    You are an in-house legal counsel at a mid-sized company in the US. You are having a conversation with your AI legal assistant about ${topic.title}. The specific context is: ${topic.description}
 
     Generate a realistic conversation that follows these guidelines:
 
     1. Conversation Structure:
        - Start with a clear context-setting message from the GC
-       - Include 3-5 exchanges between GC and AI assistant
-       - End naturally (either with a conclusion or mid-discussion)
-       - Each message should be 2-4 sentences long
+       - Vary the number of exchanges (2-20 messages) based on the complexity of the topic
+       - End naturally (either with a conclusion, next steps, or mid-discussion)
+       - Vary message length based on the content
+       - If appropriate, simulate the lawyer pasting in clauses or documents into the chat
        - Use appropriate legal terminology but keep it conversational
 
     2. Realistic GC Behavior:
@@ -63,6 +64,8 @@ export function buildThreadPrompt(topic: Topic) {
        - Ask follow-up questions when needed
        - Skip unnecessary clarifications when confident
        - Reference company-specific details naturally
+       - Vary the depth of questions (some detailed, some high-level)
+       - Mix quick clarifications with deeper discussions
 
     3. AI Assistant Responses:
        - Provide concise, practical advice
@@ -71,14 +74,17 @@ export function buildThreadPrompt(topic: Topic) {
        - Acknowledge limitations when appropriate
        - Use bullet points for complex information
        - Maintain professional but helpful tone
+       - Vary response length based on complexity and need
+       - Sometimes provide quick answers, sometimes detailed analysis, as appropriate
 
     4. Contextual Elements:
-       - Reference specific company departments
-       - Mention relevant stakeholders
-       - Consider business impact
-       - Discuss timelines and deadlines
-       - Reference past similar situations
-       - Include industry-specific details
+       - Reference specific company departments, where relevant
+       - Mention relevant stakeholders, where relevant
+       - Consider business impact, where relevant
+       - Discuss timelines and deadlines, where relevant
+       - Reference past similar situations, where relevant
+       - Include industry-specific details, where relevant
+       - Vary the level of detail in context provided
 
     5. Natural Flow:
        - Build on previous responses
@@ -86,8 +92,11 @@ export function buildThreadPrompt(topic: Topic) {
        - Include occasional clarifications
        - Allow for some back-and-forth
        - End conversations naturally
+       - Vary the pace of the conversation
+       - Include some quick exchanges (minimum 2 question/answer messages) and some longer discussions (maximum 20 question/answer messages)
+       - Mix simple confirmations with complex analyses
 
-    The conversation should feel like a real interaction between a GC and their AI assistant, with appropriate legal depth and practical focus.
+    The conversation should feel like a real interaction between a GC and their AI assistant, with appropriate legal depth and practical focus. Vary the conversation length and complexity based on the topic's nature and the GC's needs.
   `;
 }
 
@@ -100,21 +109,21 @@ export function buildAnalysisPrompt(threads: Message[][], areaOfLaw: string) {
 
     Provide a detailed analysis following this structure:
 
-    1. Common Topics (5-10 items)
+    1. Common Topics (3-6 items)
        - List recurring legal themes
        - Include specific regulations or laws referenced
        - Note any industry-specific considerations
        - Group related topics together
        - Rank by frequency of occurrence
 
-    2. Frequent Questions (5-10 items)
+    2. Frequent Questions (3-6 items)
        - Categorize by type (compliance, process, risk, etc.)
        - Note the level of specificity (general vs. specific)
        - Include context about urgency or priority
        - Identify patterns in question types
        - Rank by frequency of occurrence
 
-    3. Common Needs of GCs (5-10 items)
+    3. Common Needs of GCs (3-6 items)
        - Focus on practical needs
        - Include both immediate and strategic needs
        - Consider process vs. content needs
@@ -129,7 +138,11 @@ export function buildAnalysisPrompt(threads: Message[][], areaOfLaw: string) {
        - Coordination time saved (stakeholder communication, process management)
        - Learning curve reduction (training, knowledge transfer)
 
-    5. Recommendations (5-10 items)
+       Format each time savings entry as:
+       "The AI saved time by [specific action], in [specific activity]."
+       Example: "The AI saved time by providing a structured template and checklist, in drafting and review."
+
+    5. Recommendations (3-6 items)
        Focus on:
        - AI capability improvements
        - Process optimization
@@ -139,15 +152,16 @@ export function buildAnalysisPrompt(threads: Message[][], areaOfLaw: string) {
        - Industry-specific adaptations
 
     Ensure your analysis:
-    - Uses consistent metrics for time savings
+    - Uses consistent metrics for time savings (in minutes)
     - Provides specific examples from the threads
     - Balances quantitative and qualitative insights
     - Considers both immediate and long-term improvements
     - Maintains a practical, implementation-focused perspective
+    - Follows the exact format specified for time savings analysis
   `;
 }
 
-export function formatThreadsForAnalysis(threads: Message[][]) {
+function formatThreadsForAnalysis(threads: Message[][]) {
   return threads.map((messages, index) => 
     `<thread id="${index + 1}">
       ${messages.map(msg => 

@@ -32,7 +32,7 @@ async function generateThreadWithRetry(topic: Topic, retries = 3): Promise<any> 
     try {
       const result = await generateObject({
         model: openai('gpt-4o'),
-        maxTokens: 4000,
+        maxTokens: 8000,
         schema: threadSchema,
         prompt: buildThreadPrompt(topic)
       });
