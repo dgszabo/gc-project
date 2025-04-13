@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { analyzeChatThreads as analyzeChatThreadsAnthropic } from '@/app/actions/anthropic'
 import { analyzeChatThreads as analyzeChatThreadsOpenAI } from '@/app/actions/openai'
 import { Message, Analysis } from '@/lib/schemas'
+import { Spinner } from '@/components/spinner';
 
 interface GenerateAnalysisButtonProps {
   threads: Message[][] | null;
@@ -56,9 +57,16 @@ const GenerateAnalysisButton = ({
     <button
       onClick={handleGenerateAnalysis}
       disabled={!threads || isLoading}
-      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!threads || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!threads || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'} flex items-center justify-center`}
     >
-      {isGenerating ? 'Generating Analysis...' : 'Generate Analysis'}
+      {isGenerating ? (
+        <>
+          <Spinner className="mr-2" />
+          <span>Generating Analysis...</span>
+        </>
+      ) : (
+        'Generate Analysis'
+      )}
     </button>
   )
 }

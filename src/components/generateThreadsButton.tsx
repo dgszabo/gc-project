@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { generateThreads as generateThreadsAnthropic } from '@/app/actions/anthropic'
 import { generateThreads as generateThreadsOpenAI } from '@/app/actions/openai'
 import { Analysis, Message, Topic } from '@/lib/schemas';
+import { Spinner } from '@/components/spinner';
 
 interface GenerateThreadsButtonProps {
   topics: Topic[];
@@ -57,9 +58,16 @@ const GenerateThreadsButton = ({
     <button
       onClick={handleGenerateThreads}
       disabled={!topics || isLoading}
-      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!topics || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!topics || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'} flex items-center justify-center`}
     >
-      {isGenerating ? 'Generating Threads...' : 'Generate Threads'}
+      {isGenerating ? (
+        <>
+          <Spinner className="mr-2" />
+          <span>Generating Threads...</span>
+        </>
+      ) : (
+        'Generate Threads'
+      )}
     </button>
   )
 }

@@ -4,6 +4,13 @@ import { useState } from 'react'
 
 import { generateTopics as generateTopicsAnthropic } from '@/app/actions/anthropic'
 import { generateTopics as generateTopicsOpenAI } from '@/app/actions/openai'
+import { Spinner } from '@/components/spinner';
+
+interface Topic {
+  title: string;
+  description: string;
+  role: "user" | "assistant";
+}
 
 interface GenerateTopicsButtonProps {
   areaOfLaw: string;
@@ -59,11 +66,18 @@ const GenerateTopicsButton = ({
     <button
       onClick={handleGenerateTopics}
       disabled={isLoading}
-      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
+      className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'} flex items-center justify-center`}
     >
-      {isGenerating ? 'Generating Topics...' : 'Generate Topics'}
+      {isGenerating ? (
+        <>
+          <Spinner className="mr-2" />
+          <span>Generating Topics...</span>
+        </>
+      ) : (
+        'Generate Topics'
+      )}
     </button>
   )
 }
-
 export default GenerateTopicsButton
+
