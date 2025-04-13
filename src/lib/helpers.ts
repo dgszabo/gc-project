@@ -9,7 +9,7 @@ export function buildTopicsPrompt(areaOfLaw: string) {
     2. Intent: The type of legal assistance needed (e.g., checklist request, policy review, drafting help, regulatory analysis)
     3. Tone: The communication style (e.g., formal email, casual Slack thread, urgent request)
     4. Complexity: The level of legal expertise required (e.g., basic compliance check, complex regulatory analysis)
-    5. Specificity: The level of specificity of the question (e.g., a specific clause in a specific contract of our company vs a regulation's specific change's effect on our company, a general regultation's foreseeable effect on the industry)
+    5. Specificity: The level of specificity of the question (e.g., a specific clause in a specific contract of our company vs a regulation's specific change's effect on our company, a general regulation's foreseeable effect on the industry)
     6. Urgency: The level of urgency of the question (e.g., a question about a new regulation that we need to comply with in 2 weeks vs a question about a clause in a contract that we need to review in 2 months)
     7. Company type: The type of company (e.g., a tech company vs a manufacturing company vs a retail company)
 
@@ -32,6 +32,13 @@ export function buildTopicsPrompt(areaOfLaw: string) {
     - The expected complexity level
     - The communication context
 
+    IMPORTANT: While maintaining the exact output structure, be creative in:
+    - The specific scenarios and situations you describe
+    - The types of questions and concerns raised
+    - The business contexts and challenges presented
+    - The regulatory and compliance issues discussed
+    - The practical implementation challenges
+
     Make the topics realistic and grounded in actual legal practice. Include specific details about the company's situation, relevant regulations, and practical challenges.
   `;
 }
@@ -40,43 +47,47 @@ export function buildThreadPrompt(topic: Topic) {
   return `
     You are an in-house legal counsel at a mid-sized tech company in the US. You are having a conversation with your AI legal assistant about ${topic.title}. The specific context is: ${topic.description}
 
-    Generate a realistic conversation that:
-    1. Reflects real-world legal practice:
-       - Use appropriate legal terminology
-       - Reference specific regulations and laws
-       - Include practical business considerations
-       - Show awareness of company policies and procedures
+    Generate a realistic conversation that follows these guidelines:
 
-    2. Vary the interaction types:
-       - Initial questions and clarifications
-       - Detaildness of the discussion (how deep the lawyer wants to go into details)
-       - Level of urgency (how urgent/high priority the resolution of the question or issue is)
-       - Length of the conversation
-       - Specificity of the query (e.g. "I need to know if we can use this specific clause in our specific contract" vs "How does the GDPR affect tech companies?")
-       - Follow-up questions for deeper understanding
-       - Requests for specific examples or templates
-       - Discussion of potential risks and mitigations
-       - Requests for alternative approaches
-       - Clarification of legal requirements
-       - Discussion of implementation challenges
+    1. Conversation Structure:
+       - Start with a clear context-setting message from the GC
+       - Include 3-5 exchanges between GC and AI assistant
+       - End naturally (either with a conclusion or mid-discussion)
+       - Each message should be 2-4 sentences long
+       - Use appropriate legal terminology but keep it conversational
 
+    2. Realistic GC Behavior:
+       - Show varying levels of legal expertise
+       - Include occasional typos or informal language
+       - Express urgency or calmness appropriately
+       - Ask follow-up questions when needed
+       - Skip unnecessary clarifications when confident
+       - Reference company-specific details naturally
 
-    3. Include realistic context:
-       - Reference to company's industry and size
-       - Mention of specific departments or stakeholders
-       - Consideration of business impact
-       - Discussion of timelines and urgency
-       - Reference to past similar situations
+    3. AI Assistant Responses:
+       - Provide concise, practical advice
+       - Reference specific regulations when relevant
+       - Suggest concrete next steps
+       - Acknowledge limitations when appropriate
+       - Use bullet points for complex information
+       - Maintain professional but helpful tone
 
-    4. Show natural conversation flow:
-       - Start with clear context and question
+    4. Contextual Elements:
+       - Reference specific company departments
+       - Mention relevant stakeholders
+       - Consider business impact
+       - Discuss timelines and deadlines
+       - Reference past similar situations
+       - Include industry-specific details
+
+    5. Natural Flow:
        - Build on previous responses
        - Show progressive understanding
        - Include occasional clarifications
-       - Include occassional skipping of clarifications (in case the lawyer is confident in their understanding)
-       - Don't always end with clear next steps or conclusions (simulating an interrupted conversation)
+       - Allow for some back-and-forth
+       - End conversations naturally
 
-    The conversation should feel natural and reflect how real but different in-house counsels would interact with their legal assistants. Include specific details about the company's situation, relevant regulations, and practical challenges.
+    The conversation should feel like a real interaction between a GC and their AI assistant, with appropriate legal depth and practical focus.
   `;
 }
 
