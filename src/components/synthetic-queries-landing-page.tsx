@@ -3,12 +3,12 @@
 import { useState } from 'react';
 
 import Slider from '@/components/slider';
-import ChatThreadModal from '@/components/chatThreadModal';
+import ChatThreadModal from '@/components/chat-thread-modal';
 import { Analysis, Thread, Message } from '@/lib/schemas';
-import AnalysisResultModal from '@/components/analysisResultModal';
-import GenerateTopicsButton from '@/components/generateTopicsButton';
-import GenerateThreadsButton from '@/components/generateThreadsButton';
-import GenerateAnalysisButton from '@/components/generateAnalysisButton';
+import AnalysisResultModal from '@/components/analysis-result-modal';
+import GenerateTopicsButton from '@/components/generate-topics-button';
+import GenerateThreadsButton from '@/components/generate-threads-button';
+import GenerateAnalysisButton from '@/components/generate-analysis-button';
 
 // Area of law options
 const AREA_OF_LAW_OPTION_PRIVACY = 'Privacy Law';
