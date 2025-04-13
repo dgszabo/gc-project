@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { generateTopics } from '@/app/actions/anthropic'
+
+import { generateTopics as generateTopicsAnthropic } from '@/app/actions/anthropic'
+import { generateTopics as generateTopicsOpenAI } from '@/app/actions/openai'
 
 interface GenerateTopicsButtonProps {
   areaOfLaw: string;
@@ -11,6 +13,7 @@ interface GenerateTopicsButtonProps {
   setError: (error: string | null) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+  model: string;
 }
 
 const GenerateTopicsButton = ({
@@ -21,6 +24,7 @@ const GenerateTopicsButton = ({
   setIsLoading,
   setThreads,
   setAnalysis,
+  model,
 }: GenerateTopicsButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -35,7 +39,7 @@ const GenerateTopicsButton = ({
       setThreads(null)
       setAnalysis(null)
       
-      const data = await generateTopics(areaOfLaw)
+      const data = model === 'anthropic' ? await generateTopicsAnthropic(areaOfLaw) : await generateTopicsOpenAI(areaOfLaw)
       
       if (!data.topics) {
         throw new Error('Invalid response format: topics missing')

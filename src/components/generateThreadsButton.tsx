@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { generateThreads } from '@/app/actions/anthropic'
+
+import { generateThreads as generateThreadsAnthropic } from '@/app/actions/anthropic'
+import { generateThreads as generateThreadsOpenAI } from '@/app/actions/openai'
 import { Analysis, Message, Topic } from '@/lib/schemas';
 
 interface GenerateThreadsButtonProps {
@@ -11,6 +13,7 @@ interface GenerateThreadsButtonProps {
   setError: (error: string | null) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+  model: string;
 }
 
 const GenerateThreadsButton = ({
@@ -20,6 +23,7 @@ const GenerateThreadsButton = ({
   isLoading,
   setIsLoading,
   setAnalysis,
+  model,
 }: GenerateThreadsButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -33,7 +37,7 @@ const GenerateThreadsButton = ({
       setThreads(null)
       setAnalysis(null)
       
-      const data = await generateThreads(topics)
+      const data = model === 'anthropic' ? await generateThreadsAnthropic(topics) : await generateThreadsOpenAI(topics)
       
       if (!data.threads) {
         throw new Error('Invalid response format: threads missing')

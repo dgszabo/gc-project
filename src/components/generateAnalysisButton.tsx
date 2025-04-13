@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { analyzeChatThreads } from '@/app/actions/anthropic'
+
+import { analyzeChatThreads as analyzeChatThreadsAnthropic } from '@/app/actions/anthropic'
+import { analyzeChatThreads as analyzeChatThreadsOpenAI } from '@/app/actions/openai'
 import { Message, Analysis } from '@/lib/schemas'
 
 interface GenerateAnalysisButtonProps {
@@ -11,6 +13,7 @@ interface GenerateAnalysisButtonProps {
   setError: (error: string | null) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+  model: string;
 }
 
 const GenerateAnalysisButton = ({
@@ -20,6 +23,7 @@ const GenerateAnalysisButton = ({
   setError,
   isLoading,
   setIsLoading,
+  model,
 }: GenerateAnalysisButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -32,7 +36,7 @@ const GenerateAnalysisButton = ({
       setError(null)
       setAnalysis(null)
       
-      const data = await analyzeChatThreads(threads as Message[][], areaOfLaw)
+      const data = model === 'anthropic' ? await analyzeChatThreadsAnthropic(threads as Message[][], areaOfLaw) : await analyzeChatThreadsOpenAI(threads as Message[][], areaOfLaw)
       
       if (!data) {
         throw new Error('Invalid response format: analysis missing')

@@ -1,11 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  generateTopics,
-  generateThreads,
-  analyzeChatThreads
-} from '@/app/actions/anthropic';
 
 import Slider from '@/components/slider';
 import ChatThreadModal from '@/components/chatThreadModal';
@@ -17,6 +12,7 @@ import GenerateAnalysisButton from '@/components/generateAnalysisButton';
 
 export default function SyntheticQueriesLandingPage() {
   const [areaOfLaw, setAreaOfLaw] = useState('privacy law');
+  const [model, setModel] = useState('anthropic');
   const [topics, setTopics] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [threads, setThreads] = useState<Message[][] | null>(null);
@@ -29,7 +25,7 @@ export default function SyntheticQueriesLandingPage() {
         <h1 className="text-4xl font-bold mb-8">Synthetic GC Data Generator and Analytics</h1>
         <p className="text-lg mb-8">Generate synthetic data about in house GC and AI legal assistant interactions and analyze it with AI</p>
         
-        <div className="mb-4">
+        <div className="flex justify-between mb-4 w-full">
           <Slider
             option1="Privacy Law"
             option2="Commercial Contracts Law"
@@ -43,6 +39,13 @@ export default function SyntheticQueriesLandingPage() {
             }}
             isLoading={isLoading}
           />
+
+          <Slider
+            option1="Anthropic"
+            option2="OpenAI"
+            onToggle={(isOption2: boolean) => setModel(isOption2 ? 'openai' : 'anthropic')}
+            isLoading={isLoading}
+          />
         </div>
 
         <div className="flex gap-4">
@@ -54,6 +57,7 @@ export default function SyntheticQueriesLandingPage() {
             setError={setError}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
+            model={model}
           />
 
           <GenerateThreadsButton
@@ -63,6 +67,7 @@ export default function SyntheticQueriesLandingPage() {
             setError={setError}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
+            model={model}
           />
 
           <GenerateAnalysisButton
@@ -72,6 +77,7 @@ export default function SyntheticQueriesLandingPage() {
             setError={setError}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
+            model={model}
           />
 
           {analysis && (
