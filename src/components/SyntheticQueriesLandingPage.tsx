@@ -10,7 +10,10 @@ import {
 import Slider from '@/components/slider';
 import ChatThreadModal from '@/components/chatThreadModal';
 import { Analysis, Thread, Message } from '@/lib/schemas';
-
+import AnalysisResultModal from '@/components/analysisResultModal';
+import GenerateTopicsButton from '@/components/generateTopicsButton';
+import GenerateThreadsButton from '@/components/generateThreadsButton';
+import GenerateAnalysisButton from '@/components/generateAnalysisButton';
 
 export default function SyntheticQueriesLandingPage() {
   const [areaOfLaw, setAreaOfLaw] = useState('privacy law');
@@ -22,32 +25,12 @@ export default function SyntheticQueriesLandingPage() {
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
 
-  const handleGenerateTopics = async () => {
-    try {
-      setIsGeneratingTopics(true);
-      setError(null);
-      
-      const data = await generateTopics(areaOfLaw);
-      
-      console.log('Received topics:', data); // Debug log
-      
-      if (!data.topics) {
-        throw new Error('Invalid response format: topics missing');
-      }
-
-      setTopics(data.topics);
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsGeneratingTopics(false);
-    }
-  };
-
   const handleGenerateThreads = async () => {
     try {
       setIsGeneratingThreads(true);
       setError(null);
+      setThreads(null);
+      setAnalysis(null);
       
       const data = await generateThreads(topics);
       
@@ -70,6 +53,7 @@ export default function SyntheticQueriesLandingPage() {
     try {
       setIsGeneratingAnalysis(true);
       setError(null);
+      setAnalysis(null);
       
       const data = await analyzeChatThreads(threads as Message[][], areaOfLaw);
       
@@ -88,8 +72,6 @@ export default function SyntheticQueriesLandingPage() {
     }
   };
 
-  console.log('Analysis:', analysis);
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
@@ -103,29 +85,36 @@ export default function SyntheticQueriesLandingPage() {
             onToggle={(isOption2: boolean) => setAreaOfLaw(isOption2 ? 'commercial contracts law' : 'privacy law')}
           />
         </div>
-        
+
         <div className="flex gap-4">
-          <button
-            onClick={handleGenerateTopics}
-            disabled={isGeneratingTopics || isGeneratingThreads}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            >
-            {isGeneratingTopics ? 'Generating Topics...' : 'Generate Topics'}
-          </button>
-          <button
-            onClick={handleGenerateThreads}
-            disabled={!topics || isGeneratingTopics || isGeneratingThreads}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            >
-            {isGeneratingThreads ? 'Generating Threads...' : 'Generate Threads'}
-          </button>
-          <button
-            onClick={handleGenerateAnalysis}
-            disabled={!threads || isGeneratingAnalysis}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-          >
-            {isGeneratingAnalysis ? 'Generating Analysis...' : 'Generate Analysis'}
-          </button>
+          <GenerateTopicsButton
+            areaOfLaw={areaOfLaw}
+            setTopics={setTopics}
+            setThreads={setThreads}
+            setAnalysis={setAnalysis}
+            setError={setError}
+            setLoading={setIsGeneratingTopics}
+          />
+
+          <GenerateThreadsButton
+            topics={topics}
+            setThreads={setThreads}
+            setAnalysis={setAnalysis}
+            setError={setError}
+            setLoading={setIsGeneratingThreads}
+          />
+
+          <GenerateAnalysisButton
+            threads={threads}
+            areaOfLaw={areaOfLaw}
+            setAnalysis={setAnalysis}
+            setError={setError}
+            setLoading={setIsGeneratingAnalysis}
+          />
+
+          {analysis && (
+            <AnalysisResultModal analysis={analysis} />
+          )}
         </div>
 
         {error && (

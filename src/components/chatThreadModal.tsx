@@ -26,7 +26,7 @@ const ChatThreadModal = ({ title, messages = [] }: ChatThreadModalProps) => {
           aria-expanded={isOpen}
           aria-controls={`dialog-${title.replace(/\s+/g, '-').toLowerCase()}`}
           disabled={!messages || messages.length === 0}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${!messages || messages.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 cursor-pointer'}`}
         >
           View Thread
         </button>
