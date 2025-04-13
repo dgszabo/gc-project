@@ -33,7 +33,15 @@ export default function SyntheticQueriesLandingPage() {
           <Slider
             option1="Privacy Law"
             option2="Commercial Contracts Law"
-            onToggle={(isOption2: boolean) => setAreaOfLaw(isOption2 ? 'commercial contracts law' : 'privacy law')}
+            onToggle={(isOption2: boolean) => {
+              setAreaOfLaw(isOption2 ? 'commercial contracts law' : 'privacy law');
+              setTopics(null);
+              setThreads(null);
+              setAnalysis(null);
+              setError(null);
+              setIsLoading(false);
+            }}
+            isLoading={isLoading}
           />
         </div>
 

@@ -7,12 +7,15 @@ interface SliderProps {
   option1: string;
   option2: string;
   onToggle?: (isOption2: boolean) => void;
+  isLoading: boolean;
 }
 
-export default function Slider({ option1, option2, onToggle }: SliderProps) {
+export default function Slider({ option1, option2, onToggle, isLoading }: SliderProps) {
   const [isOption2, setIsOption2] = useState(false);
 
   const handleToggle = () => {
+    if (isLoading) return;
+  
     const newValue = !isOption2;
     setIsOption2(newValue);
     onToggle?.(newValue);
@@ -25,7 +28,8 @@ export default function Slider({ option1, option2, onToggle }: SliderProps) {
       </span>
       <button
         onClick={handleToggle}
-        className="w-14 h-7 bg-gray-200 rounded-full p-1 transition-colors duration-200 ease-in-out relative"
+        disabled={isLoading}
+        className={`w-14 h-7 bg-gray-200 rounded-full p-1 transition-colors duration-200 ease-in-out relative ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         aria-pressed={isOption2}
       >
         <div
