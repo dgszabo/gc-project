@@ -32,7 +32,7 @@ async function generateThreadWithRetry(topic: Topic, retries = 3): Promise<any> 
     try {
       const result = await generateObject({
         model: anthropic('claude-3-5-sonnet-20241022'),
-        maxTokens: 4000,
+        maxTokens: 8000,
         schema: threadSchema,
         prompt: buildThreadPrompt(topic)
       });
