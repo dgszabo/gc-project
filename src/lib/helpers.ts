@@ -2,7 +2,7 @@ import { Message, Topic } from "@/lib/schemas";
 
 export function buildTopicsPrompt(areaOfLaw: string) {
   return `
-    You are an in-house legal counsel at a mid-sized tech company in the US. You need to generate realistic legal discussion topics that would occur between in-house counsel and their AI legal assistant.
+    You are an in-house legal counsel at a mid-sized company in the US. You need to generate realistic legal discussion topics that would occur between in-house counsel and their AI legal assistant.
 
     For each topic, consider and vary the following:
     1. Context: The specific situation or workflow (e.g., vendor contract review, policy drafting, regulatory compliance)
@@ -10,6 +10,8 @@ export function buildTopicsPrompt(areaOfLaw: string) {
     3. Tone: The communication style (e.g., formal email, casual Slack thread, urgent request)
     4. Complexity: The level of legal expertise required (e.g., basic compliance check, complex regulatory analysis)
     5. Specificity: The level of specificity of the question (e.g., a specific clause in a specific contract of our company vs a regulation's specific change's effect on our company, a general regultation's foreseeable effect on the industry)
+    6. Urgency: The level of urgency of the question (e.g., a question about a new regulation that we need to comply with in 2 weeks vs a question about a clause in a contract that we need to review in 2 months)
+    7. Company type: The type of company (e.g., a tech company vs a manufacturing company vs a retail company)
 
     Generate 10 diverse topics about ${areaOfLaw} law that cover different scenarios:
     - Vendor and third-party risk management
@@ -80,19 +82,57 @@ export function buildThreadPrompt(topic: Topic) {
 
 export function buildAnalysisPrompt(threads: Message[][], areaOfLaw: string) {
   return `
-    You are a world class legal analytics expert. Analyze the following chat threads between legal counsels and their AI assistants about ${areaOfLaw} to extract key insights.
+    You are a legal analytics expert specializing in evaluating AI-assisted legal work. Analyze the following chat threads between legal counsels and their AI assistants about ${areaOfLaw}.
 
     Chat Threads:
     ${formatThreadsForAnalysis(threads)}
 
-    Analyze the conversations and provide insights about the following:
-    - Common legal topics discussed across most threads
-    - Frequently asked questions across most threads
-    - Key insights about the legal counsel's needs
-    - Estimated time saved by using AI (consider research, drafting, and review time)
-    - Recommendations for improving the AI assistant's responses
+    Provide a detailed analysis following this structure:
 
-    Go step by step through each criterion.
+    1. Common Topics (5-10 items)
+       - List recurring legal themes
+       - Include specific regulations or laws referenced
+       - Note any industry-specific considerations
+       - Group related topics together
+       - Rank by frequency of occurrence
+
+    2. Frequent Questions (5-10 items)
+       - Categorize by type (compliance, process, risk, etc.)
+       - Note the level of specificity (general vs. specific)
+       - Include context about urgency or priority
+       - Identify patterns in question types
+       - Rank by frequency of occurrence
+
+    3. Common Needs of GCs (5-10 items)
+       - Focus on practical needs
+       - Include both immediate and strategic needs
+       - Consider process vs. content needs
+       - Note any gaps in current support
+       - Rank by importance
+
+    4. Time Savings Analysis
+       For each thread, calculate time saved by considering:
+       - Research time saved (legal research, regulatory review)
+       - Drafting time saved (document creation, template development)
+       - Review time saved (document review, compliance checking)
+       - Coordination time saved (stakeholder communication, process management)
+       - Learning curve reduction (training, knowledge transfer)
+
+    5. Recommendations (5-10 items)
+       Focus on:
+       - AI capability improvements
+       - Process optimization
+       - Content enhancement
+       - Integration suggestions
+       - Training needs
+       - Industry-specific adaptations
+
+    Ensure your analysis:
+    - Uses consistent metrics for time savings
+    - Provides specific examples from the threads
+    - Balances quantitative and qualitative insights
+    - Considers both immediate and long-term improvements
+    - Maintains a practical, implementation-focused perspective
   `;
 }
 
