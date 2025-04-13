@@ -25,7 +25,7 @@ export default function SyntheticQueriesLandingPage() {
         <h1 className="text-4xl font-bold mb-8">Synthetic GC Data Generator and Analytics</h1>
         <p className="text-lg mb-8">Generate synthetic data about in house GC and AI legal assistant interactions and analyze it with AI</p>
         
-        <div className="flex justify-between mb-4 w-full">
+        <div className="flex justify-between mb-6 w-full">
           <Slider
             option1="Privacy Law"
             option2="Commercial Contracts Law"

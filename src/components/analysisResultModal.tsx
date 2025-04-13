@@ -50,7 +50,7 @@ const AnalysisResultModal = ({ analysis }: AnalysisResultModalProps) => {
           View Analysis Results
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-full w-full sm:max-w-[765px] max-h-full overflow-y-auto py-[40px] px-[32px]">
+      <DialogContent className="max-w-full w-full sm:max-w-[765px] max-h-[calc(100vh-2rem)] overflow-y-auto py-[40px] px-[32px]">
         <div className="flex justify-between items-center mb-6">
           <DialogTitle className="text-2xl">
             Analysis Results Email Preview

@@ -34,7 +34,7 @@ const ChatThreadModal = ({ title, messages = [], isLoading }: ChatThreadModalPro
       </DialogTrigger>
       <DialogContent 
         id={`dialog-${title.replace(/\s+/g, '-').toLowerCase()}`}
-        className="max-w-full w-full sm:max-w-[765px] max-h-full overflow-y-auto py-[40px] px-[32px]"
+        className="max-w-full w-full sm:max-w-[765px] max-h-[calc(100vh-2rem)] overflow-y-auto py-[40px] px-[32px]"
       >
         <DialogTitle className="text-2xl mb-6">
           {title}
