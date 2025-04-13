@@ -36,3 +36,19 @@ export type Message = z.infer<typeof messageSchema>;
 export type Thread = z.infer<typeof threadSchema>;
 export type ThreadsResponse = z.infer<typeof threadsResponseSchema>;
 
+// ANALYSIS SCHEMAs
+export const analysisSchema = z.object({
+  keyInsights: z.array(z.object({
+    commonTopics: z.array(z.string()),
+    frequentQuestions: z.array(z.string()),
+    commonNeedsofGCs: z.array(z.string()),
+  })),
+  timeSavingsPerThread: z.array(z.object({
+    estimatedMinutesSaved: z.number(),
+    threadIndex: z.number(),
+    explanation: z.string()
+  })),
+  recommendations: z.array(z.string())
+});
+
+export type Analysis = z.infer<typeof analysisSchema>;

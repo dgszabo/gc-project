@@ -1,11 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { generateThreads, generateTopics } from '@/app/actions/anthropic';
+import {
+  generateTopics,
+  generateThreads,
+  analyzeChatThreads
+} from '@/app/actions/anthropic';
 
 import Slider from '@/components/slider';
 import ChatThreadModal from '@/components/chatThreadModal';
-import { Thread } from '@/lib/schemas';
+import { Analysis, Thread, Message } from '@/lib/schemas';
 
 
 export default function SyntheticQueriesLandingPage() {
@@ -13,8 +17,10 @@ export default function SyntheticQueriesLandingPage() {
   const [topics, setTopics] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
-  const [threads, setThreads] = useState<any>(null);
+  const [threads, setThreads] = useState<Message[][] | null>(null);
   const [isGeneratingThreads, setIsGeneratingThreads] = useState(false);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
 
   const handleGenerateTopics = async () => {
     try {
@@ -60,7 +66,29 @@ export default function SyntheticQueriesLandingPage() {
     }
   };
 
-  console.log('Threads:', threads);
+  const handleGenerateAnalysis = async () => {
+    try {
+      setIsGeneratingAnalysis(true);
+      setError(null);
+      
+      const data = await analyzeChatThreads(threads as Message[][], areaOfLaw);
+      
+      console.log('Received analysis:', data); // Debug log
+      
+      if (!data) {
+        throw new Error('Invalid response format: analysis missing');
+      }
+
+      setAnalysis(data as Analysis);
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsGeneratingAnalysis(false);
+    }
+  };
+
+  console.log('Analysis:', analysis);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -91,6 +119,13 @@ export default function SyntheticQueriesLandingPage() {
             >
             {isGeneratingThreads ? 'Generating Threads...' : 'Generate Threads'}
           </button>
+          <button
+            onClick={handleGenerateAnalysis}
+            disabled={!threads || isGeneratingAnalysis}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          >
+            {isGeneratingAnalysis ? 'Generating Analysis...' : 'Generate Analysis'}
+          </button>
         </div>
 
         {error && (
@@ -112,7 +147,7 @@ export default function SyntheticQueriesLandingPage() {
                     </div>
                     <ChatThreadModal 
                       title={topic.title}
-                      messages={threads?.[index]}
+                      messages={threads?.[index] || []}
                     />
                   </div>
                 </div>

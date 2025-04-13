@@ -2,7 +2,7 @@
 
 import { generateObject } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic'
-import { Topic, topicsResponseSchema, threadSchema } from '@/lib/schemas';
+import { Topic, topicsResponseSchema, threadSchema, Message, analysisSchema } from '@/lib/schemas';
 
 export async function generateTopics(areaOfLaw: string = 'privacy law') {
   const { object: topics } = await generateObject({
@@ -52,3 +52,42 @@ async function generateThreadWithRetry(topic: Topic, retries = 3): Promise<any> 
   }
 }
 
+export async function analyzeChatThreads(threads: Message[][], areaOfLaw: string) {
+  const formattedThreads = threads.map((messages, index) => 
+    `<thread id="${index + 1}">
+      ${messages.map(msg => 
+        `<message>
+          <role>${msg.role}</role>
+          <content>${msg.content}</content>
+        </message>`
+      ).join('\n')}
+    </thread>`
+  ).join('\n');
+
+  const { object: analysis } = await generateObject({
+    model: anthropic('claude-3-5-sonnet-20241022'),
+    maxTokens: 8000,
+    schema: analysisSchema,
+    prompt: `
+      You are a world class legal analytics expert. Analyze the following chat threads between legal counsels and their AI assistants about ${areaOfLaw} to extract key insights.
+
+      Chat Threads:
+      ${formattedThreads}
+
+      Analyze the conversations and provide insights about the following:
+      - Common legal topics discussed across most threads
+      - Frequently asked questions across most threads
+      - Key insights about the legal counsel's needs
+      - Estimated time saved by using AI (consider research, drafting, and review time)
+      - Recommendations for improving the AI assistant's responses
+
+      Go step by step through each criterion.
+    `
+  });
+
+  if (!analysis) {
+    throw new Error('Failed to generate analysis');
+  }
+
+  return analysis;
+}
