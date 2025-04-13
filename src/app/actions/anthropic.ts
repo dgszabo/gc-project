@@ -12,7 +12,7 @@ export async function generateTopics(areaOfLaw: string = 'privacy law') {
     prompt: `
       You are a world class legal expert. You generate life-like topics an in house legal council of a company would have a conversations about with their AI legal assistant.
 
-      Generate 2 topics the in house legal council would discuss with the AI assistant about ${areaOfLaw} law relevant to the company. Be brief, but make sure the topic ideas are sufficiently detailed.
+      Generate 10 topics the in house legal council would discuss with the AI assistant about ${areaOfLaw} law relevant to the company. Be brief, but make sure the topic ideas are sufficiently detailed.
     `
   });
 
