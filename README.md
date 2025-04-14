@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). This project is designed to simulate conversations between a company's internal general council and their AI assistant and analyse these interactions.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). This project is designed to simulate conversations between a company's internal general council and their AI assistant and analyze these interactions.
 
 ## Getting Started
 
